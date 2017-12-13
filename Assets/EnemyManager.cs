@@ -5,30 +5,30 @@ using UnityEngine;
 public class EnemyManager : MonoBehaviour {
 
     public int misses, maxMisses, maxActive, currActive;
-    public float delayBetweenMove;
+    public float delayBetweenMove, enemyLifeTime;
     public List<EnemyScript> gameObjectPos = new List<EnemyScript>();
     public bool shootingRangeMode = false;
 
-    private void Awake()
+    private void Start()
     {
         currActive = 0;
         if (shootingRangeMode)
             ShootingRangeMode();
         else
-            WhackAMoleMode();
+            SpawnWhackAMoleMode();
     }
     private void ShootingRangeMode()
     {
 
     }
-    private void WhackAMoleMode()
+    public void SpawnWhackAMoleMode()
     {
         for(int i = currActive; i < maxActive; i++)
         {
             int j = Random.Range(0, gameObjectPos.Count - 1);
             if (!gameObjectPos[j].inUse)
             {
-                SpawnEnemy(gameObjectPos[j].gameObject);
+                SpawnEnemy(gameObjectPos[j]);
             }
             else
             {
@@ -36,25 +36,34 @@ public class EnemyManager : MonoBehaviour {
                 {
                     if (!_es.inUse)
                     {
-                        SpawnEnemy(_es.gameObject);
+                        SpawnEnemy(_es);
                         break;
                     }
                 }
             }
-            Debug.Log(currActive);
+            //Debug.Log(currActive);
         }
     }
-    public void SpawnEnemy(GameObject _enemy)
+    public void SpawnEnemy(EnemyScript _enemy)
     {
-        if (_enemy.activeSelf.Equals(false))
-            _enemy.SetActive(true);
-        Debug.Log(_enemy.gameObject.name);
-        currActive++;
+        if (!_enemy.gameObject.activeSelf)
+        {
+            _enemy.gameObject.SetActive(true);
+            Debug.Log(_enemy.gameObject.name);
+            try
+            {
+                _enemy.Spawning();
+            }
+            catch
+            {
+                Debug.LogError("Spawn enemy cannot access the enemy's script");
+            }
+        }
+        //currActive++;
     }
    
     public void Update()
     {
 
     }
-    
 }
