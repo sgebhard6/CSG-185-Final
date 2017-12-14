@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyManager : MonoBehaviour {
 
@@ -8,7 +9,13 @@ public class EnemyManager : MonoBehaviour {
     public float delayBetweenMove, enemyLifeTime;
     public List<EnemyScript> gameObjectPos = new List<EnemyScript>();
     public bool shootingRangeMode = false;
+	public int playerPoints, enemyPtValue;
+	UIManager UiMan;
 
+	private void Awake()
+	{
+		UiMan = GameObject.FindObjectOfType<UIManager>();
+	}
     private void Start()
     {
         currActive = 0;
@@ -50,18 +57,18 @@ public class EnemyManager : MonoBehaviour {
         {
             _enemy.gameObject.SetActive(true);
             Debug.Log(_enemy.gameObject.name);
-            try
-            {
-                _enemy.Spawning();
-            }
-            catch
-            {
-                Debug.LogError("Spawn enemy cannot access the enemy's script");
-            }
+			_enemy.Spawning();
         }
-        //currActive++;
+        currActive++;
     }
-   
+	public void Despawn(EnemyScript _enemy)
+	{
+		currActive--;
+		_enemy.inUse = false;
+		_enemy.gameObject.SetActive(false);
+		UiMan.score = (UiMan.score + enemyPtValue);
+
+	}
     public void Update()
     {
 
