@@ -11,7 +11,8 @@ public class EnemyManager : MonoBehaviour {
     public List<EnemyScript> gameObjectPos = new List<EnemyScript>();
     public bool shootingRangeMode = false;
 	public int playerPoints, enemyPtValue;
-	UIManager UiMan;
+
+    private UIManager UiMan;
 
 	private void Awake()
 	{
@@ -39,10 +40,36 @@ public class EnemyManager : MonoBehaviour {
     private void ShootingRangeMode()
     {
         Debug.Log("Start shooting range");
+        GenSpawn();
     }
+    //made it up with spawning seperately so going to call another method in here
     private void SpawnWhackAMoleMode()
     {
-        for(int i = currActive; i < maxActive; i++)
+        GenSpawn();
+        //for(int i = currActive; i < maxActive; i++)
+        //{
+        //    int j = Random.Range(0, gameObjectPos.Count - 1);
+        //    if (!gameObjectPos[j].inUse)
+        //    {
+        //        SpawnEnemy(gameObjectPos[j]);
+        //    }
+        //    else
+        //    {
+        //        foreach(EnemyScript _es in gameObjectPos)
+        //        {
+        //            if (!_es.inUse)
+        //            {
+        //                SpawnEnemy(_es);
+        //                break;
+        //            }
+        //        }
+        //    }
+        //}
+    }
+    //look at spawn whack a mole mode comment for explanaition
+    private void GenSpawn()
+    {
+        for (int i = currActive; i < maxActive; i++)
         {
             int j = Random.Range(0, gameObjectPos.Count - 1);
             if (!gameObjectPos[j].inUse)
@@ -51,7 +78,7 @@ public class EnemyManager : MonoBehaviour {
             }
             else
             {
-                foreach(EnemyScript _es in gameObjectPos)
+                foreach (EnemyScript _es in gameObjectPos)
                 {
                     if (!_es.inUse)
                     {
