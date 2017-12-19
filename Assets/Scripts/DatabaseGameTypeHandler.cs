@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class PostGameType : MonoBehaviour
+public class DatabaseGameTypeHandler : MonoBehaviour
 {
 	public delegate void GameTypeDelegate (int gameTypeID);
 

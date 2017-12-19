@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class PostScore : MonoBehaviour
+public class DatabaseScoreHandler : MonoBehaviour
 {
 	public int score;
 	int playerID;
 	int gameTypeID;
-	public PostGameType pgt;
+	public DatabaseGameTypeHandler pgt;
 
 	public string targetURL;
 
@@ -16,12 +16,12 @@ public class PostScore : MonoBehaviour
 
 	void OnEnable ()
 	{
-		PostPlayer.OnPost += SetPlayerID;
+		DatabasePlayerHandler.OnPost += SetPlayerID;
 	}
 
 	void OnDisable ()
 	{
-		PostPlayer.OnPost -= SetPlayerID;
+		DatabasePlayerHandler.OnPost -= SetPlayerID;
 	}
 
 	void SetPlayerID (int _playerID)

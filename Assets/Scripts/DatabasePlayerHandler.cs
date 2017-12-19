@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class PostPlayer : MonoBehaviour
+public class DatabasePlayerHandler : MonoBehaviour
 {
 	public delegate void PlayerDelegate (int playerID);
 
