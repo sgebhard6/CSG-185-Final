@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class EnemyManager : MonoBehaviour {
 
     public int misses, maxMisses, maxActive, currActive;
-    public float delayBetweenMove, enemyLifeTime;
+    public float spawnDelay, enemyLifeTime;
     public List<EnemyScript> gameObjectPos = new List<EnemyScript>();
     public bool shootingRangeMode = false;
 	public int playerPoints, enemyPtValue;
@@ -19,16 +20,27 @@ public class EnemyManager : MonoBehaviour {
     private void Start()
     {
         currActive = 0;
-        if (shootingRangeMode)
+    }
+    public void StartGame(bool _shootingRange)
+    {
+        if (_shootingRange)
+        {
+            shootingRangeMode = true;
+            StartCoroutine(UiMan.StartDelay());
             ShootingRangeMode();
+        }
         else
+        {
+            shootingRangeMode = false;
+            StartCoroutine(UiMan.StartDelay());
             SpawnWhackAMoleMode();
+        }
     }
     private void ShootingRangeMode()
     {
-
+        Debug.Log("Start shooting range");
     }
-    public void SpawnWhackAMoleMode()
+    private void SpawnWhackAMoleMode()
     {
         for(int i = currActive; i < maxActive; i++)
         {
@@ -48,15 +60,22 @@ public class EnemyManager : MonoBehaviour {
                     }
                 }
             }
-            //Debug.Log(currActive);
         }
     }
-    public void SpawnEnemy(EnemyScript _enemy)
+    public IEnumerator WaitSpawn(float _wait, EnemyScript _enemy)
+    {
+        yield return new WaitForSeconds(_wait);
+        if(currActive < maxActive)
+        {
+            SpawnWhackAMoleMode();
+        }
+    }
+    private void SpawnEnemy(EnemyScript _enemy)
     {
         if (!_enemy.gameObject.activeSelf)
         {
             _enemy.gameObject.SetActive(true);
-            Debug.Log(_enemy.gameObject.name);
+            //Debug.Log(_enemy.gameObject.name);
 			_enemy.Spawning();
         }
         currActive++;
@@ -67,10 +86,19 @@ public class EnemyManager : MonoBehaviour {
 		_enemy.inUse = false;
 		_enemy.gameObject.SetActive(false);
 		UiMan.score = (UiMan.score + enemyPtValue);
-
-	}
-    public void Update()
+        if (misses >= maxMisses)
+        {
+            EndGame();
+        }
+        else
+        {
+            StartCoroutine(WaitSpawn(spawnDelay, _enemy));
+        }
+    }
+    public void EndGame()
     {
-
+        Debug.Log("end game");
+        UiMan.gameStart = false;
+        SceneManager.LoadScene("GameOver");
     }
 }

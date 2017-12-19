@@ -37,13 +37,15 @@ public class UIManager : MonoBehaviour
 	public int firstScore;
 	public int secondScore;
 	public int thirdScore;
+    public bool shootRangeMode = false;
 
+    private EnemyManager em;
 
-
-	// Use this for initialization
-	void Start()
+    // Use this for initialization
+    void Start()
 	{
-		countDown.GetComponent<Text>().text = "(Press Any Arrow To Start)";
+        em = GameObject.FindObjectOfType<EnemyManager>();
+        countDown.GetComponent<Text>().text = "(Press Any Arrow To Start)";
 		//try
 		//{
 		//	player = GameObject.FindGameObjectWithTag("Player");
@@ -96,7 +98,12 @@ public class UIManager : MonoBehaviour
 		//	player = Instantiate(playerPre, startSquare.transform.position + spawnOffset, startSquare.transform.rotation) as GameObject;
 		//}
 	}
-	IEnumerator StartDelay()
+    //toggle
+    public void SetMode()
+    {
+        shootRangeMode = !shootRangeMode;
+    }
+	public IEnumerator StartDelay()
 	{
 		//yield return new WaitForSeconds (delay);
 
@@ -110,9 +117,9 @@ public class UIManager : MonoBehaviour
 		HUD.SetActive(true);
 		splash.SetActive(false);
 		countDown.GetComponent<Text>().text = "(Press Any Arrow To Start)";
+        //Debug.Log(shootRangeMode);
+        em.StartGame(shootRangeMode);
 		gameStart = true;
-
-
 	}
 	void CheckScores()
 	{

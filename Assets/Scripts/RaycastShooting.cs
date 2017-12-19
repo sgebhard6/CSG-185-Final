@@ -21,9 +21,8 @@ public class RaycastShooting : MonoBehaviour {
 				//Debug.Log("raycasting");
 				if (hit.collider.GetComponent<EnemyScript>())
 				{
-					Debug.Log("hit");
+					//Debug.Log("hit");
 					eMAn.Despawn(hit.collider.GetComponent<EnemyScript>());
-					//hit.collider.GetComponent<EnemyScript>().Despawning();
 					hit.collider.gameObject.SetActive(false);
 				}
 			}
