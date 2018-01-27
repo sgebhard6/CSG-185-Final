@@ -21,12 +21,6 @@ public class DatabaseGameTypeHandler : MonoBehaviour
 	void Awake ()
 	{
 		StartCoroutine (GetGameTypes ());
-		//StartCoroutine (Post ());
-	}
-
-	void Start ()
-	{
-		//StartCoroutine (Post ());
 	}
 
 	IEnumerator GetGameTypes ()

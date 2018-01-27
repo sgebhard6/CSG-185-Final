@@ -5,6 +5,10 @@ using UnityEngine;
 
 public class GetSprites : MonoBehaviour
 {
+	public delegate void SpriteDelegate ();
+
+	public static event SpriteDelegate OnGetSprites;
+
 	public List<Sprite> spriteList;
 	public string imageFolderName;
 
@@ -32,5 +36,7 @@ public class GetSprites : MonoBehaviour
 				spriteList.Add (sprite);
 			}
 		}
+
+		OnGetSprites ();
 	}
 }

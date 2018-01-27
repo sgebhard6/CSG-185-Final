@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 public class DatabaseScoreHandler : MonoBehaviour
 {
@@ -9,6 +11,9 @@ public class DatabaseScoreHandler : MonoBehaviour
 	int playerID;
 	int gameTypeID;
 	public DatabaseGameTypeHandler pgt;
+	public UIManager uiManager;
+	public List<Text> names;
+	public List<Text> scores;
 
 	public string targetURL;
 
@@ -17,24 +22,34 @@ public class DatabaseScoreHandler : MonoBehaviour
 	void OnEnable ()
 	{
 		DatabasePlayerHandler.OnPost += SetPlayerID;
+		EnemyManager.OnEndGame += EndGame;
 	}
 
 	void OnDisable ()
 	{
 		DatabasePlayerHandler.OnPost -= SetPlayerID;
+		EnemyManager.OnEndGame -= EndGame;
+	}
+
+	void Awake ()
+	{
+		StartCoroutine (GetScores ());
 	}
 
 	void SetPlayerID (int _playerID)
 	{
 		playerID = _playerID;
+	}
+
+	void EndGame ()
+	{
 		StartCoroutine (Post ());
 	}
 
 	IEnumerator Post ()
 	{
 		gameTypeID = pgt.GetGameTypeID ();
-		print ("game id: " + gameTypeID);
-		Score scoreToPost = new Score (playerID, gameTypeID, score);
+		Score scoreToPost = new Score (playerID, gameTypeID, uiManager.score);
 		UnityWebRequest www = UnityWebRequest.Post ("http://localhost:83/api/Scores", "");
 		UploadHandler customUploadHandler = new UploadHandlerRaw (System.Text.Encoding.UTF8.GetBytes (JsonUtility.ToJson (scoreToPost)));
 		customUploadHandler.contentType = "application/json";
@@ -45,7 +60,7 @@ public class DatabaseScoreHandler : MonoBehaviour
 		else
 			Debug.Log ("Success: " + www.responseCode);
 
-		StartCoroutine (GetScores ());
+		SceneManager.LoadScene ("GameRoom");
 	}
 
 	IEnumerator GetScores ()
@@ -71,7 +86,9 @@ public class DatabaseScoreHandler : MonoBehaviour
 						tempString = tempString.Substring (0, tempString.Length - 1);
 
 					highScores.Add (JsonUtility.FromJson<TopTenScore> (tempString));
-					print ("PlayerName: " + highScores [i].PlayerName + " Score: " + highScores [i].Score);
+					//print ("PlayerName: " + highScores [i].PlayerName + " Score: " + highScores [i].Score);
+					names [i].text = highScores [i].PlayerName;
+					scores [i].text = highScores [i].Score.ToString ();
 					//scoreListings [i].text = gameTypes [i].PlayerName + ": " + gameTypes [i].Score;
 					i++;
 				}

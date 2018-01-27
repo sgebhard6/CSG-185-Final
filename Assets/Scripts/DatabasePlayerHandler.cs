@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Networking;
 
 public class DatabasePlayerHandler : MonoBehaviour
@@ -13,8 +14,11 @@ public class DatabasePlayerHandler : MonoBehaviour
 
 	public int PlayerID { get; private set; }
 
-	void Start ()
+	public Text name;
+
+	public void SetName ()
 	{
+		playerName = name.text;
 		StartCoroutine (Post ());
 	}
 
